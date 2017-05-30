@@ -1,0 +1,40 @@
+MFLAGS=-sf ../lib/Makefile
+
+build: $(EXO)/libexam.a
+
+# FIXME These two rules are used only by the platform. it should probably (re)moved
+compile: only-compile
+	@echo "Executing $(EXO):"
+	@$(DST) $(PARGS) `printf '%b\n' "$(subst %,\x,$(subst +, ,$(ARGS)))"`
+
+only-compile:
+ifndef EXO
+	$(error EXO should be define)
+endif
+ifndef DST
+	$(error DST should be define)
+endif
+	$(MAKE) $(MFLAGS) -C $(EXO) $(DST)
+
+$(EXO)/libexam.a:
+ifndef EXO
+	$(error EXO should be define)
+endif
+	$(MAKE) $(MFLAGS) -C $(EXO) libexam.a
+
+new:
+ifndef EXO
+	$(error EXO should be define)
+endif
+	mkdir $(EXO)
+	cp -R lib/skel/*.c lib/skel/*.yaml lib/skel/*.mk $(EXO)
+	mv $(EXO)/template.c $(EXO)/exercice.c
+
+clean:
+ifndef EXO
+	$(error EXO should be define)
+endif
+	$(RM) $(EXO)/*.o $(EXO)/*.a $(EXO)/provided.h
+
+mrproper:
+	make -C lib clean
