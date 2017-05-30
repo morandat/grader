@@ -1,0 +1,19 @@
+#!/bin/bash
+
+[ -z "$1" ] && echo "need object file" && exit
+INPUT="$1"
+OUTPUT="$INPUT"
+shift
+[ "$1" ] && OUTPUT="$1"
+
+SYMS="$(nm --defined-only "$INPUT" |
+  sed 's/^.* T //' )"
+
+# - Rename symbols as __SYM
+# - Create alias SYM = __SYM
+# - Weakenize aliases
+# `ld` can't work on stdinput, it uses seek
+objcopy $(echo $SYMS | sed 's/\b\([^ ]*\)\b/--redefine-sym \1=__\1 /g') $INPUT $OUTPUT
+echo $SYMS | sed 's/\b\([^ ]*\)\b/\1 = __\1;\n/g' | ld -r -T/dev/stdin -o $OUTPUT.tmp $OUTPUT
+mv $OUTPUT.tmp $OUTPUT
+objcopy $(echo $SYMS | sed 's/\b\([^ ]*\)\b/-W \1 /g') $OUTPUT

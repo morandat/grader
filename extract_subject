@@ -1,0 +1,56 @@
+#!/bin/sh
+PROVIDED=
+[ "$1" = "--provided" ] && PROVIDED=true && shift
+OUTPUT=/dev/stdout
+[ "$2" ] && OUTPUT="$2"
+
+IN=$1
+[ -z "$IN" ] && IN="-"
+
+if [ "$PROVIDED" ] ; then
+    DIR="`dirname $1`"
+    [ -f $DIR/prolog.c ] && IN="$DIR/prolog.c $IN"
+    [ -f $DIR/epilog.c ] && IN="$IN $DIR/epilog.c"
+    cat $IN |
+sed -e '/^[[:alnum:]_][][\*[:alnum:][:space:],()_]*$/{
+:l
+  N
+  h
+  s/\n[][\*[:alnum:][:space:],()_]\{1,\}$//
+  g
+  t l
+s/\n{/;/
+t e
+  p
+  b n
+:e
+  s/\([_a-zA-Z0-9]*\)(/__\1(/
+  G
+:n
+}' | sed -e '
+/^{/,/^}/c \
+    ;'
+else
+  cat $IN | # remove code of functions without tags
+sed -e '
+/^{$/,/^}/c \
+    ;
+' | # replace code by the one in //
+sed -e '
+/^{.*[rR][eE][pP][lL][aA][cC][eE][dD]\{0,1\}/,/^}/{
+  # Skip once finished
+  /^}/{ g; n; }
+  # Remove original lines
+  /^\s*\/\//!d
+  # Remove leading //
+  s:^\s*//::g
+}
+' | # Keep blocs
+ sed -e '
+/^{.*\([gG][iI][vV][eE][nN]\)/,/^}/{
+  # Remove tags
+  s/^{.*/{/
+  n
+ }
+'
+fi
