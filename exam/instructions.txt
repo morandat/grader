@@ -1,0 +1,71 @@
+Sujet
+=====
+
+Votre répertoire de travail, après copie, contient différents fichiers, dont un
+fichier `.c` par exercice. Vous devrez modifier ces fichiers pour résoudre les
+exercices. Les consignes de chaque exercice sont données dans les commentaires
+des fichiers concernés.
+
+> Il n'est pas conseillé de modifier les autres fichiers:
+> seuls les fichiers `.c` à la racine seront pris en compte pour l'évaluation.
+
+##### Tests
+
+Les tests que nous vous fournissons exécutent vos fonctions avec différents
+paramètres d'entrée et vérifient que les résultats fournis sont corrects. En
+cas d'erreur le message suivant peut s'afficher:
+
+FAILED (X)
+ :  votre programme a réussi X tests avant d'échouer.
+
+La ligne qui *précède* contient un peu plus d'information pour
+vous aider à la diagnostiquer. Notez qu'en cas de `segfault` ou de boucle
+infinie vous serez également prévenus.
+
+> NB: Les fichiers qui ne **compilent pas** ne serons **pas examinés**. Pensez
+> donc à commenter les fonctions qui les empêcheraient de compiler.
+
+##### Compiler
+
+Le `Makefile` fournis vous permet de compiler les exercices facilement.
+Vous pourrez par exemple compiler `un_exercice` puis le tester depuis un
+terminal :
+
+~~~
+  make un_exercice
+  ./un_exercice
+~~~
+
+Voici l'ensemble des commandes supplémentaires à votre disposition.
+
+`make`
+: Compile tous les exercices
+
+`make tests`
+: Lance les tests pour tous les exercices
+
+`make clean`
+: Supprime les fichiers générés par la compilation
+
+`make clean tests`
+: Nettoie, recompile et teste tout
+
+##### Execution 
+
+Quelques options de l'exécutable un_exercice
+
+`./un_exercice -l`
+: Affiche l'ensemble des tests définis pour cet exercice
+  sous la forme
+   nom_exercice:nom_test
+
+`./un_exercice nom_exercice:nom_test`
+: Execute uniquement le test nommé mom_test
+
+> NB: vous pouvez rajouter vos propres `main` dans les exercices. Pour
+> l'exécuter à la place des test, il faudra lancer votre programme en lui
+> rajoutant comme paramètre `-m`.  
+> Par exemple: `./un_exercice -m`  
+> Vous pouvez ajouter les paramètres de votre choix après `-m`,
+> ils seront passés tels quels à votre programme.
+

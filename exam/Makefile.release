@@ -1,0 +1,18 @@
+include Makefile
+release: all clean
+		@echo '--- ' Removing temp files
+		find . -name '*[~#]' | xargs $(RM)
+		@echo '--- ' Cleaning lib directory
+		sed -i.bak "/^libexam.a:/s/:.*/:/" exam/lib/Makefile
+		find exam/lib -not -name 'Makefile' -a -type f | xargs $(RM)
+		@echo '--- ' Cleaning remaining code and objects for all exercices
+		find exam -name '*.[co]' | xargs $(RM)
+		find exam -name 'provided.h' | xargs $(RM)
+		@echo '--- ' Removing this file
+		$(RM) Makefile.release
+		@echo 
+		@echo Now you can use :
+		@echo '    ' rendu
+		@echo to deploy effectively:
+		@echo '    ' ssh examens tar xvzf - --strip1 -C /examens/sujets/XXXXX '<' XXXXX.tar.gz
+		@echo '    ' ssh examens touch /examens/sujets/XXXXX/.tar_exclude_dir

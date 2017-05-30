@@ -1,0 +1,10 @@
+TARGETS=@TARGETS@
+all: $(TARGETS)
+clean: 
+	$(RM) *.o $(TARGETS)
+tests: $(addprefix test-, $(TARGETS))
+test-%: %
+	@echo ==== $< ====
+	@./$<
+	@echo
+.PHONY: all clean tests $(addprefix test-, $(TARGETS))
